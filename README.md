@@ -52,13 +52,21 @@ You can install dependencies using either pip or Anaconda.
 git clone https://github.com/yourusername/fund_rl.git
 cd fund_rl
 python3.10 -m venv venv
-source venv/bin/activate   # On Windows use: venv\Scripts\activate
+# On Unix/macOS:
+source venv/bin/activate
+# On Windows:
+venv\Scripts\activate
 pip install -r requirements.txt
+```
+
+---
 
 #### Using Anaconda
 
+```bash
 git clone https://github.com/yourusername/fund_rl.git
 cd fund_rl
 conda create -n fund_rl python=3.10
 conda activate fund_rl
 pip install -r requirements.txt
+```
