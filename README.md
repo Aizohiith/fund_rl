@@ -78,7 +78,7 @@ You can install dependencies using either pip or Anaconda.
 #### Using pip
 
 ```bash
-git clone https://github.com/yourusername/fund_rl.git
+git clone https://github.com/Aizohiith/fund_rl.git
 cd fund_rl
 python3.10 -m venv venv
 # On Unix/macOS:
@@ -91,7 +91,7 @@ pip install -r requirements.txt
 #### Using Anaconda
 
 ```bash
-git clone https://github.com/yourusername/fund_rl.git
+git clone https://github.com/Aizohiith/fund_rl.git
 cd fund_rl
 conda create -n fund_rl python=3.10
 conda activate fund_rl
