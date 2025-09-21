@@ -54,3 +54,11 @@ cd fund_rl
 python3.10 -m venv venv
 source venv/bin/activate   # On Windows use: venv\Scripts\activate
 pip install -r requirements.txt
+
+#### Using Anaconda
+
+git clone https://github.com/yourusername/fund_rl.git
+cd fund_rl
+conda create -n fund_rl python=3.10
+conda activate fund_rl
+pip install -r requirements.txt
