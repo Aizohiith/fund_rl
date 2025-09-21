@@ -8,10 +8,10 @@ def Show_Available_Environments():
     from fund_rl.utility.format import Format
 
     Print = []
-    for ps_Env in gym.envs.registry.keys():
-        ps_Env = ps_Env.partition("-")[0]
-        if ps_Env not in Print:
-            Print.append(ps_Env)
+    for Environment_Name in gym.envs.registry.keys():
+        Environment_Name = Environment_Name.partition("-")[0]
+        if Environment_Name not in Print:
+            Print.append(Environment_Name)
     Print.sort()
     Print.insert(0, "Available Environments in Gymnasium:")
     print(Format(Print))
