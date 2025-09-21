@@ -75,7 +75,7 @@ def Q_Learning():
     Tracker = TLocal_Tracker()
 
     # Train the Agent
-    Train_Agent(Environment, Agent, Tracker, Episodes=2_000)
+    Train_Agent(Environment, Agent, Tracker, Episodes=2_000, Early_Stopping=5.00)
 
     # Disable training mode for evaluation
     Agent.Is_Training = False
@@ -148,8 +148,6 @@ def Generating_Videos():
     from fund_rl.utility.wrappers import Make_Environment
     from fund_rl.trackers.base import TTracker
     from fund_rl.training.trainer import Train_Agent
-    from fund_rl.evaluate.evaluation import Evaluate_Agent
-    from fund_rl.utility.run import Run_Agent
 
     from fund_rl.utility.settings import AGENT_DDQN_CARTPOLE
     from fund_rl.agents.ddqn import TDDQN_Agent
@@ -177,7 +175,7 @@ def Generating_Videos():
 if __name__ == "__main__":
     #Show_Available_Environments()
     #REINFORCE()
-    #Q_Learning()
+    Q_Learning()
     #DDQN()
-    WandB_Sweep()
+    #WandB_Sweep()
     #Generating_Videos()
