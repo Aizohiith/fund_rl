@@ -59,8 +59,6 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
----
-
 #### Using Anaconda
 
 ```bash
