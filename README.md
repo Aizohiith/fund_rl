@@ -6,6 +6,35 @@ This makes it a perfect tool for students, researchers, and anyone looking to **
 
 ---
 
+### 🚧 In Development
+
+> ⚠️ **This library is still under active development** and not yet ready for production use.
+
+The core functionality is present, but several components are incomplete or undergoing refinement to improve consistency, readability, and overall usability.
+
+#### 🔧 Known Areas That Need Work
+
+- ❗ **Inconsistent comments** across modules and functions
+- 📝 **Variable and function renaming** for clarity and naming conventions
+- 📚 **Lack of docstrings** and inline documentation in agent implementations
+- 🧪 **Analyzer tools are missing** or partially implemented
+- 🧱 **Some utility functions** are still placeholders or not yet implemented
+- 📉 **Certain agents (e.g., PPO)** need modular cleanup and restructuring
+
+#### 🧠 Project Philosophy
+
+> `fund_rl` is designed for **clarity over optimization**.
+
+Unlike high-performance RL libraries, `fund_rl` intentionally prioritizes:
+
+- Transparent agent implementations
+- 1:1 flow diagram to code mapping
+- Code that favors learning and explainability over performance
+
+Contributions, testing, and suggestions are very welcome as the library continues to mature.
+
+---
+
 ## 🧩 Key Features
 
 - Multiple agent implementations: `Q-Learning`, `REINFORCE`, `DDQN`, `PPO`
