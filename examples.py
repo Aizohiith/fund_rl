@@ -39,6 +39,8 @@ def REINFORCE():
 
     # Initialize the Tracker
     Tracker = TLocal_Tracker()
+    Tracker.Add_Property("Loss")
+    Tracker.Add_Property("Entropy")
 
     # Train the Agent
     Train_Agent(Environment, Agent, Tracker, Episodes=1_000)
@@ -130,19 +132,83 @@ def WandB_Sweep():
     """
     from fund_rl.sweeps.wb import WandB_Sweep
     from fund_rl.utility.wrappers import Make_Environment
-    from fund_rl.agents.ddqn import TDDQN_Agent
-    from fund_rl.utility.settings import SWEEP_DDQN
+    from fund_rl.agents.ppo import TPPO_Agent
+    import fund_rl.utility.settings as Settings
+
+    from fund_rl.utility.wrappers import TOne_Hot_Encode
 
     print("WandB Sweep Demo")
 
     # Create the environment
-    Environment = Make_Environment("CartPole-v1")
+    Environment = TOne_Hot_Encode(Make_Environment("FrozenLake-v1"))
 
     # Define the sweep configuration
-    Config = SWEEP_DDQN
+    Config = Settings.SWEEP_PPO
 
     # Run the sweep
-    WandB_Sweep(Environment, TDDQN_Agent, "Masters", "Aizohiith", Config, Episodes=200)
+    WandB_Sweep(Environment, TPPO_Agent, "Masters", "Aizohiith", Config, Episodes=1000)
+
+def State_Visitation_Analyzer():
+    from fund_rl.utility.wrappers import Make_Environment
+    from fund_rl.trackers.metric import TMetric_Tracker
+    from fund_rl.training.trainer import Train_Agent
+    from fund_rl.evaluate.evaluation import Evaluate_Agent
+    from fund_rl.utility.run import Run_Agent
+
+    from fund_rl.agents.qlearning import TQ_Epsilon_Agent
+    from fund_rl.analyzers.state_visitation import TState_Visitation_Analyzer
+
+    print("State Visitation Analyzer Demo")
+
+    # Create the environment
+    Environment_Name = "FrozenLake-v1"
+    Environment = Make_Environment(Environment_Name, is_slippery=False)
+
+    # Initialize the Agent
+    Agent = TQ_Epsilon_Agent(Environment)
+
+    # Initialize the Tracker
+    Tracker = TMetric_Tracker()
+
+    # Initialize the Analyzer
+    Analyzer = TState_Visitation_Analyzer(Most_Common_States=16, Tracker=Tracker)
+
+    # Train the Agent
+    Train_Agent(Environment, Agent, Tracker, Episodes=2_000, Early_Stopping=1.00)
+
+    # Analyze the state visitation heatmap
+    Analyzer.Analyze()
+
+    # Print the analysis report
+    Analyzer.Print()
+
+    # Print Agent
+    print(Agent)
+
+    # Plot the results
+    Analyzer.Plot()
+
+    # Reset the Tracker for evaluation
+    Tracker = TMetric_Tracker()
+
+    # Reinitialize the Analyzer
+    Analyzer = TState_Visitation_Analyzer(Most_Common_States=16, Tracker=Tracker)
+
+    # Disable training mode for evaluation
+    Agent.Is_Training = False
+
+    # Evaluate the Agent
+    Evaluate_Agent(Environment, Agent, Tracker, Episodes=100)
+
+    # Analyze the state visitation after evaluation
+    Analyzer.Analyze()
+
+    # Print the analysis report after evaluation
+    Analyzer.Print()
+
+    # Plot the results after evaluation
+    Analyzer.Plot()
+
 
 def Generating_Videos():
     from fund_rl.utility.wrappers import Make_Environment
@@ -175,7 +241,8 @@ def Generating_Videos():
 if __name__ == "__main__":
     #Show_Available_Environments()
     #REINFORCE()
-    Q_Learning()
+    #Q_Learning()
     #DDQN()
+    State_Visitation_Analyzer()
     #WandB_Sweep()
     #Generating_Videos()
