@@ -31,7 +31,23 @@ def EMA(Old_Value : float, New_Value : float, Alpha : float = 0.99):
     """
     return float((Old_Value * Alpha)) + (New_Value * ( 1 - Alpha))
 
-def Parrallel_Average(Data : list):
+def EMA_Filter(Data : list, Alpha : float = 0.99):
+    """
+    Applies an Exponential Moving Average (EMA) filter to a list of numerical data.
+    Args:
+        Data (list): A list of numerical values to be filtered.
+        Alpha (float): The smoothing factor for the EMA.
+    Returns:
+        list: A list containing the EMA-filtered values.
+    """
+    larr_Result = []
+    lf_Value = 0
+    for C1 in Data:
+        lf_Value = EMA(lf_Value, C1, Alpha)
+        larr_Result.append(lf_Value)
+    return larr_Result
+
+def Parrallel_Average_Filter(Data : list):
     """
     Computes the element-wise average of a list of lists (2D array).
     Args:
@@ -48,3 +64,33 @@ def Parrallel_Average(Data : list):
         Value /= len(Data)
         Result.append(Value)
     return Result
+
+def Mean_Filter(Data : list):
+    """
+    Computes the cumulative mean of a list of numerical data.
+    Args:
+        Data (list): A list of numerical values.
+    Returns:
+        list: A list containing the cumulative mean values.
+    """
+    larr_Result = []
+    lf_Sum = 0
+    for C1 in range(len(Data)):
+        lf_Sum += Data[C1]
+        larr_Result.append(lf_Sum / (C1 + 1))
+    return larr_Result
+
+def STD_Filter(Data : list):
+    """
+    Computes the cumulative standard deviation of a list of numerical data.
+    Args:
+        Data (list): A list of numerical values.
+    Returns:
+        list: A list containing the cumulative standard deviation values.
+    """
+    larr_Result = []
+    larr_Values = []
+    for C1 in range(len(Data)):
+        larr_Values.append(Data[C1])
+        larr_Result.append(float(np.std(larr_Values)))
+    return larr_Result
