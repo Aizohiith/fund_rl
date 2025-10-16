@@ -120,4 +120,5 @@ class TTracker():
         Args:
             Name (str): Name of the new property.
         """
-        self.garr_Log_Data.append(Name)
+        if (Name not in self.garr_Log_Data):
+            self.garr_Log_Data.append(Name)
