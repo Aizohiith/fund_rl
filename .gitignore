@@ -5,3 +5,5 @@ __pycache__/
 *.pyd
 *.pycache/
 wandb/
+diagrams/
+experiments/
