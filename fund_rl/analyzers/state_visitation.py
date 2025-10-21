@@ -5,21 +5,29 @@ import matplotlib.pyplot as plt
 from fund_rl.utility.format import Format
 
 class TState_Visitation_Analyzer(TAnalyzer):
+    """
+    Analyzer to track and report state visitation frequencies.
+    """
     def __init__(self, Precision=2, Most_Common_States=10, Tracker=None):
-        super().__init__()
+        super().__init__(Tracker=Tracker)
 
         self.gf_Precision = Precision  # Precision for state representation
         self.gi_Most_Common_States = Most_Common_States  # Number of most common states to display
 
-        if Tracker is not None:
-            self.Set_Tracker(Tracker)
-
     def Set_Tracker(self, Tracker):
+        """
+        Set the tracker for the analyzer.
+        Parameters:
+            Tracker (TMetric_Tracker): The tracker instance to use.
+        """
         super().Set_Tracker(Tracker)
 
         self.gg_Tracker.Add_Property("State")
 
     def Analyze(self):
+        """
+        Analyze state visitation frequencies.
+        """
         if self.gg_Tracker is None:
             raise ValueError("Tracker not set. Please set a TMetric_Tracker instance using Set_Tracker method.")
 
@@ -38,10 +46,11 @@ class TState_Visitation_Analyzer(TAnalyzer):
         self.gg_Report['Average_Visits_Per_State'] = np.mean(larr_Top_States_Count)
         self.gg_Report['Median_Visits_Per_State'] = np.median(larr_Top_States_Count)
         self.gg_Report['STD_Visits_Per_State'] = np.std(larr_Top_States_Count)
-        
-        return self.gg_Report
     
     def Plot(self):
+        """
+        Plot the state visitation frequencies.
+        """
         if not self.gg_Report:
             raise ValueError("No analysis report found. Please run Analyze method first.")
         
@@ -54,6 +63,9 @@ class TState_Visitation_Analyzer(TAnalyzer):
         plt.show()
 
     def Print(self):
+        """
+        Print the state visitation analysis report.
+        """
         if not self.gg_Report:
             raise ValueError("No analysis report found. Please run Analyze method first.")
         
@@ -64,5 +76,5 @@ class TState_Visitation_Analyzer(TAnalyzer):
                 for E1 in ll_Value:
                     larr_Report.append(f" - {E1}")
             else:
-                larr_Report.append(f"{ls_Key}: {ll_Value:.3f}")
+                larr_Report.append(f"{ls_Key}: {ll_Value:.{self.gf_Precision}f}" if isinstance(ll_Value, float) else f"{ls_Key}: {ll_Value}")
         print(Format(larr_Report))
