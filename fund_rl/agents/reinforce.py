@@ -25,6 +25,7 @@ class TReinforce_Agent(TAgent):
                  Hidden_Dimensions : int = 128):
         super().__init__(Environment)
         self.Name = "REINFORCE"
+        self.Entropy = 0.0
         self.gf_Learning_Rate = Learning_Rate
         self.gf_Discount_Factor = Discount_Factor
         self.gf_Entropy_Factor = Entropy_Factor
@@ -59,6 +60,7 @@ class TReinforce_Agent(TAgent):
         #normalize the returns
         larr_Returns -= np.mean(larr_Returns)
         larr_Returns /= np.std(larr_Returns) + 1e-8
+
         return larr_Returns
 
     def Choose_Action(self, State : np.ndarray) -> int:
@@ -69,11 +71,16 @@ class TReinforce_Agent(TAgent):
         Returns:
             The chosen action.
         """
-        #Get the logits from the model
-        larr_Logits = self.Model(torch.tensor(State, dtype=torch.float32)).detach()
-        #generate a categorical distribution over the list of logits
+        # Convert state to a tensor
+        ll_State = torch.tensor(State, dtype=torch.float32)
+
+        # Get the logits from the model
+        larr_Logits = self.Model(ll_State).detach()
+
+        # generate a categorical distribution over the list of logits
         larr_Action_Probabilities = Categorical(logits=larr_Logits)
-        #Sample an action using the distribution
+
+        # Sample an action using the distribution
         li_Action = larr_Action_Probabilities.sample().item()
 
         return li_Action
@@ -84,6 +91,10 @@ class TReinforce_Agent(TAgent):
         Args:
             Transition: The transition data to update the agent.
         """
+        # Check if agent is in training mode
+        if (not self.Is_Training):
+            return
+        
         # Unpack the transition
         _, _, _, _, lb_Done = Transition
 
@@ -111,25 +122,32 @@ class TReinforce_Agent(TAgent):
 
         # Get the logits from the model
         ll_Logits = self.Model(ll_States)
+
         # Get probabilities of actions taken
         ll_Action_Probabilities = Categorical(logits=ll_Logits)
+
         # Calculate log probabilities
         ll_Log_Action_Probabilities = ll_Action_Probabilities.log_prob(ll_Actions.squeeze())
+
         # Calculate the entropy
-        lf_Entropy = ll_Action_Probabilities.entropy().mean()
+        ll_Entropy = ll_Action_Probabilities.entropy().mean()
+        self.Entropy = ll_Entropy.item()
+
         # Calculate a baseline
-        lf_Baseline = torch.mean(ll_Returns)
+        ll_Baseline = torch.mean(ll_Returns)
+
         # Calculate advantage estimates using the baseline
-        ll_Advantage = ll_Returns - lf_Baseline
+        ll_Advantage = ll_Returns - ll_Baseline
+
         # Calculate the loss
-        ll_Loss = -torch.mean(ll_Advantage *  ll_Log_Action_Probabilities) - self.gf_Entropy_Factor * lf_Entropy
+        ll_Loss = -torch.mean(ll_Advantage *  ll_Log_Action_Probabilities) - self.gf_Entropy_Factor * ll_Entropy
 
         # Perform backpropagation and optimization
         self.Optimizer.zero_grad()
         ll_Loss.backward()
         self.Optimizer.step()
 
-        #Log the loss
+        # Log the loss
         self.Loss = ll_Loss.item()
 
     def Policy(self, State: np.ndarray) -> np.ndarray:
@@ -140,8 +158,18 @@ class TReinforce_Agent(TAgent):
         Returns:
             A list of action probabilities.
         """
-        #Get the action probabilities from the model
-        larr_Probabilities = torch.softmax(self.Model(torch.tensor(State, dtype=torch.float32)), dim=-1).detach().numpy()
+        # Convert state to a tensor
+        ll_State = torch.tensor(State, dtype=torch.float32)
+
+        # Get the logits from the model
+        ll_Logits = self.Model(ll_State)
+
+        # Get the action probabilities from the model
+        larr_Probabilities = torch.softmax(ll_Logits, dim=-1).detach()
+
+        # Convert probabilities to numpy array
+        larr_Probabilities = larr_Probabilities.numpy()
+        
         return larr_Probabilities
 
 
