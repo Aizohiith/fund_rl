@@ -9,10 +9,10 @@ class TNetwork(nn.Module):
         Input_Dimension (int): Dimension of the input features.
         Output_Dimension (int): Dimension of the output features (e.g., number of actions or value predictions).
     """
-    def __init__(self, Input_Dimension : int, Output_Dimension : int) -> None:
+    def __init__(self, Input_Dimensions : int, Output_Dimensions : int) -> None:
         super().__init__()
-        self.gi_Input_Dimension = Input_Dimension
-        self.gi_Output_Dimension = Output_Dimension
+        self.gi_Input_Dimensions = Input_Dimensions
+        self.gi_Output_Dimensions = Output_Dimensions
 
     def forward(self, X : torch.Tensor) -> torch.Tensor:
         """

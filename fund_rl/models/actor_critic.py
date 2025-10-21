@@ -110,7 +110,7 @@ class TActor_Critic_Network_Separate(TNetwork):
     def __init__(self, Input_Dimensions : int, Output_Dimensions : int, Hidden_Dimensions : int = 128, 
                  Hidden_Layers : int = 1, Final_Activation : Optional[Callable[[], nn.Module]] = None, Activation : Type[nn.Module] = nn.Tanh,
                  Layer_Initialization : Optional[Callable[[nn.Module], nn.Module]] = None) -> None:        
-        super().__init__(Input_Dim=Input_Dimensions, Output_Dim=Output_Dimensions)
+        super().__init__(Input_Dimensions=Input_Dimensions, Output_Dimensions=Output_Dimensions)
 
         larr_Layers = []
 
