@@ -41,7 +41,7 @@ def EMA_Filter(Data : list, Alpha : float = 0.99):
         list: A list containing the EMA-filtered values.
     """
     larr_Result = []
-    lf_Value = 0
+    lf_Value = Data[0]
     for C1 in Data:
         lf_Value = EMA(lf_Value, C1, Alpha)
         larr_Result.append(lf_Value)
