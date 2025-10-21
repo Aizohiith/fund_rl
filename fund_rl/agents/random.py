@@ -14,6 +14,8 @@ class TRandom_Agent(TAgent):
         self.gg_Environment = Environment
         self.Name = "Random"
         self.Action_Mask_Function = Action_Mask_Function
+        if Action_Mask_Function is not None:
+            self.Name += "-Masked"
 
     def Choose_Action(self, State):
         """
