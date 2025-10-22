@@ -1,8 +1,25 @@
-ANALYZER_STATE_VISITATION_CARTPOLE = {
-    "parr_Feature_Names": ["Position", "Velocity", "Angle", "Angular Velocity"],
-    "pi_Decimal_Places": 1,
-    "pi_Top_N": 50,
-    "parr_Feature_Indices": range(4),
+# Configuration settings for analyzers
+ANALYZER_FEATURE_DISTRIBUTION_HEATMAP_CARTPOLE = {
+    "Feature_Names": ["Position", "Velocity", "Angle", "Angular Velocity"],
+    "Bins": 50,
+    "Feature_Indices": range(4),
+}
+
+ANALYZER_POLICY_VISUALISATION_FROZENLAKE = {
+    "Action_Order": [0, 1, 2, 3],  # LEFT, DOWN, RIGHT, UP
+    "Grid_Size": (4, 4),
+}
+
+ANALYZER_POLICY_VISUALISATION_CLIFFWALKING = {
+    "Action_Order": [3, 2, 1, 0],  # UP, RIGHT, DOWN, LEFT
+    "Grid_Size": (12, 4),
+}
+
+ANALYZER_DECISION_BOUNDARY_CARTPOLE = {
+    "Feature_Names": ["Position", "Velocity", "Angle", "Angular Velocity"],
+    "Feature_Indices": range(4),
+    "Feature_Minimum": [-10.0, -10.0, -10.0, -10.0],
+    "Feature_Maximum": [10.0, 10.0, 10.0, 10.0],
 }
 
 ANALYZER_STATE_VISITATION_LUNAR_LANDER = {
@@ -11,35 +28,18 @@ ANALYZER_STATE_VISITATION_LUNAR_LANDER = {
     "pi_Top_N": 50,
     "parr_Feature_Indices": [0, 1, 4, 5],
 }
-
-# AGENT_DDQN_CARTPOLE = { #200 Episodes
-#     "pi_Hidden_Dimensions": 128,
-#     "pi_Hidden_Layers": 1,
-#     "pi_Batch_Size": 2048,
-#     "pi_Swap_Frequency": 4,
-#     "pi_Update_Frequency": 4,
-# }
-
+#
+# Configuration settings for DDQN agent
+    
 AGENT_DDQN_CARTPOLE = { #200 Episodes
-    "Hidden_Dimensions": 128,
-    "Hidden_Layers": 1,
-    "Batch_Size": 64,
-    "Swap_Frequency": 100,
-    "Update_Frequency": 4,
-    "Exploration_Decay": 0.995,
-    "Learning_Rate": 0.001,
+    "Hidden_Dimensions": 264,
+    "Hidden_Layers": 3,
+    "Batch_Size": 152,
+    "Swap_Frequency": 12,
+    "Update_Frequency": 1,
+    "Exploration_Decay": 0.2137904205126695,
+    "Learning_Rate": 0.0002222757658205644,
 }
-
-AGENT_DDQN_BREAKOUT_RAM = {
-    "Hidden_Dimensions": 256,           # 512 works but is overkill for 128-dim RAM input
-    "Hidden_Layers": 2,                 # Two layers give enough non-linearity
-    "Batch_Size": 64,                   # You can afford a bigger batch for faster learning on small inputs
-    "Swap_Frequency": 5000,             # Faster swap improves stability in low-dim environments
-    "Update_Frequency": 4,              # Standard update frequency
-    "Exploration_Decay": 0.9999,         # Slightly faster decay due to faster convergence on RAM input
-    "Learning_Rate": 0.0005,            # Slightly higher learning rate can help RAM-based learning
-}
-
 
 AGENT_DDQN_SNAKE = { #1_000 Episodes
     "Hidden_Dimensions": 128,
@@ -49,40 +49,48 @@ AGENT_DDQN_SNAKE = { #1_000 Episodes
     "Update_Frequency": 32,
     "Exploration_Decay": 0.9999342140184785,
 }
+#
+# Configuration settings for PPO agent
 
-AGENT_DDQN_PONG_RAM = { #1_000 Episodes
-    "Hidden_Dimensions": 128,
-    "Hidden_Layers": 1,
-    "Batch_Size": 2048,
-    "Swap_Frequency": 8,
-    "Update_Frequency": 4,
-    "Exploration_Decay": 0.9999934212070889,
+AGENT_PPO_FROZENLAKE = {
+    "Hidden_Dimensions": 8,
+    "Hidden_Layers": 3,
+    "Learning_Rate": 0.01081653664182426,
+    "Iterations": 8,
+    "Batch_Size": 168,
+    "Minibatch_Size": 56,
+    "Entropy_Factor": 0.1,
 }
 
 AGENT_PPO_CARTPOLE = { #200 Episodes
     "Hidden_Dimensions": 64,
     "Hidden_Layers": 2,
-    "Learning_Rate": 0.0003,
-    "Iterations": 8,
+    "Learning_Rate": 0.0004706893404237208,
+    "Iterations": 16,
+    "Batch_Size": 856,
+    "Minibatch_Size": 24,
+}
+
+AGENT_PPO_LUNAR_LANDER = { #1_000 Episodes
+    "Hidden_Dimensions": 296,
+    "Hidden_Layers": 5,
+    "Learning_Rate": 0.00007537747866268359,
+    "Iterations": 4,
+    "Batch_Size": 1336,
+    "Minibatch_Size": 64,
 }
 
 AGENT_PPO_SNAKE = {
-    "Hidden_Dimensions": 128,
-    "Hidden_Layers": 1,
-    "Learning_Rate": 1e-3,
-    "Iterations": 4,
-    "Batch_Size": 2048,
-    "Minibatch_Size": 512,
+    "Hidden_Dimensions": 256,
+    "Hidden_Layers": 3,
+    "Learning_Rate": 0.000293264649968785,
+    "Iterations": 16,
+    "Batch_Size": 480,
+    "Entropy_Factor": 0.006432220592416948,
+    "Minibatch_Size": 120,
 }
-
-AGENT_PPO_PONG_RAM = {
-    "Hidden_Dimensions": 128,
-    "Hidden_Layers": 1,
-    "Learning_Rate": 5e-4,
-    "Iterations": 4,
-    "Batch_Size": 512,
-    "Minibatch_Size": 128,
-}
+#
+# Configuration settings for REINFORCE agent
 
 AGENT_REINFORCE_CARTPOLE = { #200 Episodes
     "Hidden_Dimensions": 8,
@@ -90,12 +98,19 @@ AGENT_REINFORCE_CARTPOLE = { #200 Episodes
     "Learning_Rate": 0.0067272261749594655,
 }
 
+AGENT_REINFORCE_FROZENLAKE = {
+    "Hidden_Dimensions": 8,
+    "Hidden_Layers": 3,
+    "Learning_Rate": 0.01081653664182426,
+}
+
 AGENT_REINFORCE_LUNAR_LANDER = { #10_000 Episodes
     "Hidden_Dimensions": 128,
     "Hidden_Layers": 1,
     "Learning_Rate": 1e-4,
 }
-
+#
+# Configuration settings for WandB sweeps
 
 SWEEP_REINFORCE = {
     "method": "bayes",
@@ -125,6 +140,11 @@ SWEEP_PPO = {
         "Learning_Rate": {
             "distribution": "log_uniform_values",
             "min": 1e-12,
+            "max": 1.0,
+        },
+        "Entropy_Factor": {
+            "distribution": "uniform",
+            "min": 0.0,
             "max": 1.0,
         },
         "Hidden_Layers": {
@@ -197,3 +217,4 @@ SWEEP_DDQN = {
         }
     }
 }
+#
