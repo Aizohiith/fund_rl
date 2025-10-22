@@ -65,7 +65,6 @@ class TDDQN_Agent(TAgent, TEpsilon_Greedy_Action_Selection):
         larr_Batch = self.Memory.Batch()
 
         # Convert batch elements into tensors
-        
         ll_States = torch.tensor(np.array([s for (s, _, _, _, _) in larr_Batch]), dtype=torch.float32)
         li_Actions = torch.tensor(np.array([[a] for (_, a, _, _, _) in larr_Batch]), dtype=torch.long)  # Shape (batch_size, 1)
         lf_Rewards = torch.tensor(np.array([r for (_, _, r, _, _) in larr_Batch]), dtype=torch.float32)
