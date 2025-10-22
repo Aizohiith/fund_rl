@@ -41,7 +41,7 @@ class TSnake_Environment(gym.Env):
 
         self.spec = gym.envs.registration.EnvSpec(id="Snake-v0", entry_point=TSnake_Environment)
 
-        self.observation_space = spaces.Box(low=0, high=max(max(self.gi_Width, self.gi_Height), 3), shape=(16 * self.gi_Stacked_Observations,), dtype=np.int32 )
+        self.observation_space = spaces.Box(low=0, high=1, shape=(16 * self.gi_Stacked_Observations,), dtype=np.int32 )
 
         self.reset()
 
