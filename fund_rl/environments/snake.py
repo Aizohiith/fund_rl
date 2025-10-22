@@ -164,7 +164,7 @@ class TSnake_Environment(gym.Env):
 
 
             pygame.display.flip()
-            self.clock.tick(0)
+            self.clock.tick(8)
 
         elif self.gs_Render_Mode == "rgb_array":
             ll_Surface = pygame.Surface((self.gi_Window_Size, self.gi_Window_Size))
