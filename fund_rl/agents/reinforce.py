@@ -158,37 +158,21 @@ class TReinforce_Agent(TAgent):
         Returns:
             A list of action probabilities.
         """
-        # Convert state to a tensor
+        # Convert input to tensor
         ll_State = torch.tensor(State, dtype=torch.float32)
-
-        # Get the logits from the model
-        ll_Logits = self.Model(ll_State)
-
-        # Get the action probabilities from the model
-        larr_Probabilities = torch.softmax(ll_Logits, dim=-1).detach()
-
-        # Convert probabilities to numpy array
-        larr_Probabilities = larr_Probabilities.numpy()
+        
+        # Ensure batch dimension
+        if ll_State.ndim == 1:
+            ll_State = ll_State.unsqueeze(0)
+        
+        # Get action probabilities
+        larr_Probabilities = torch.softmax(self.Model(ll_State), dim=-1).detach().numpy()
+        
+        # If single state, return 1D array
+        if larr_Probabilities.shape[0] == 1:
+            return larr_Probabilities.squeeze(0)
         
         return larr_Probabilities
-
-
-    def Save(self, ps_Path):
-        """
-        Save the agent's model to the specified path.
-        Args:
-            ps_Path: Path to save the model.
-        """
-        raise NotImplementedError("Save method not implemented.")
-    
-    def Load(self, ps_Path):
-        """
-        Load the agent's model from the specified path.
-        Args:
-            ps_Path: Path to load the model from.
-        """
-        raise NotImplementedError("Load method not implemented.")
-    
 
     def __str__(self):
         """
