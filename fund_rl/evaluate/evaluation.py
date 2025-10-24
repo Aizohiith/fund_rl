@@ -22,14 +22,18 @@ def Evaluate_Agent(Environment: gym.Env, Agent: TAgent, Tracker: TTracker = None
     Returns:
         None
     """
+    # Ensure the agent is in evaluation mode
     if Agent.Is_Training:
         raise ValueError("Agent is in training mode. Set Is_Training to False before evaluation.")
 
+    # Initialize the tracker if provided
     if (Tracker is not None):
         Tracker.Set_Iterations(Episodes)
         Tracker.Start("Evaluating: " + Agent.Name + " on " + Environment.spec.id)
 
+    # Run the agent for the specified number of episodes
     Run_Agent(Environment, Agent, Tracker, Episodes)
 
+    # Finalize the tracker if provided
     if Tracker is not None:
         Tracker.Finish()
