@@ -48,8 +48,10 @@ def Run_Agent(Environment: gym.Env, Agent: TAgent, Tracker: TTracker = None, Epi
 
     # Training loop
     for li_Episode in range(Episodes):
+
         # Reset the environment at the start of each episode
         ll_State, _ = Environment.reset()
+
         # Initialize variables to track rewards and steps
         lf_Total_Reward = 0
         li_Step = 0
@@ -62,8 +64,10 @@ def Run_Agent(Environment: gym.Env, Agent: TAgent, Tracker: TTracker = None, Epi
 
             # Agent selects action based on current state
             li_Action = Agent.Choose_Action(ll_State)
+
             # Take action in the environment
             ll_Next_State, lf_Reward, pb_Done, pb_Truncated, _ = Environment.step(li_Action)
+            
             # Update the agent with the transition
             li_Step += 1
             pb_Done = pb_Done or pb_Truncated
