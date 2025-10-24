@@ -41,7 +41,7 @@ class TSnake_Environment(gym.Env):
 
         self.spec = gym.envs.registration.EnvSpec(id="Snake-v0", entry_point=TSnake_Environment)
 
-        self.observation_space = spaces.Box(low=0, high=1, shape=(16 * self.gi_Stacked_Observations,), dtype=np.int32 )
+        self.observation_space = spaces.Box(low=0, high=1, shape=(16 * self.gi_Stacked_Observations,), dtype=np.float32 )
 
         self.reset()
 
@@ -229,7 +229,7 @@ class TSnake_Environment(gym.Env):
         for C1 in range(len(self.garr_Stacked_Observations)):
             larr_Observation.extend(self.garr_Stacked_Observations[C1])
 
-        return np.array(larr_Observation, dtype=np.int32)
+        return np.array(larr_Observation, dtype=np.float32)
 
     def Place_Food(self):
         """
