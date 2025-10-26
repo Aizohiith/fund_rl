@@ -26,6 +26,7 @@ class TReinforce_Agent(TAgent):
         super().__init__(Environment)
         self.Name = "REINFORCE"
         self.Entropy = 0.0
+        self.Loss = 0.0
         self.gf_Learning_Rate = Learning_Rate
         self.gf_Discount_Factor = Discount_Factor
         self.gf_Entropy_Factor = Entropy_Factor
