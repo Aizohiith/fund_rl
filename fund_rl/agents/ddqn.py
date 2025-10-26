@@ -51,15 +51,13 @@ class TDDQN_Agent(TAgent, TEpsilon_Greedy_Action_Selection):
         return li_Action
 
     def Update(self, Transition):
-        # Unpack the transition tuple
-        ll_State, li_Action, lf_Reward, ll_Next_State, lb_Done = Transition
 
         # Only update if training
         if not (self.Is_Training):
             return
 
         # Store the transition in memory
-        self.Memory.Remember((ll_State, li_Action, lf_Reward, ll_Next_State, lb_Done))
+        self.Memory.Remember(Transition)
 
         # Check if it's time to update
         if (self.Training_Steps % self.gf_Update_Frequency == 0):
@@ -70,6 +68,7 @@ class TDDQN_Agent(TAgent, TEpsilon_Greedy_Action_Selection):
             self.Model_Target.load_state_dict(self.Model_Current.state_dict())
 
         # If episode is done, decay exploration rate
+        ll_State, li_Action, lf_Reward, ll_Next_State, lb_Done = Transition
         if lb_Done:
             self.Decay_Exploration_Rate()
 
