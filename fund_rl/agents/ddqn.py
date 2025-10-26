@@ -14,12 +14,16 @@ class TDDQN_Agent(TAgent, TEpsilon_Greedy_Action_Selection):
                  Hidden_Dimensions=128, Hidden_Layers=1, Activation=nn.ReLU):
         TAgent.__init__(self, Environment)
         TEpsilon_Greedy_Action_Selection.__init__(self, Exploration_Rate, Exploration_Decay)
-        self.gf_Learning_Rate = Learning_Rate
+        self.Name = "DDQN"
 
+        # DDQN specific parameters
+        self.gf_Learning_Rate = Learning_Rate
         self.gf_Swap_Frequency = Swap_Frequency
         self.gf_Update_Frequency = Update_Frequency
         self.gf_Discount_Factor = Discount_Factor
         self.Memory = TReplay_Buffer(Batch_Size=Batch_Size)
+
+        # Neural network models
         self.Model_Current = TBasic_Network(self.Observation_Space, self.Action_Space, 
                                             Hidden_Dimensions=Hidden_Dimensions, Hidden_Layers=Hidden_Layers,
                                             Activation=Activation)
@@ -28,15 +32,17 @@ class TDDQN_Agent(TAgent, TEpsilon_Greedy_Action_Selection):
                                            Activation=Activation)
         self.Model_Target.load_state_dict(self.Model_Current.state_dict())
 
+        # Optimizer
         self.Optimizer = optim.RMSprop(self.Model_Current.parameters(), lr=self.gf_Learning_Rate)
-        self.Name = "DDQN"
 
     def Choose_Action(self, State):
 
+        # Convert state to tensor
         ll_State = torch.tensor(State, dtype=torch.float32)
         li_Action = -1
-        # Choose the random action
+
         if self.Should_Explore() and self.Is_Training:
+            # Choose the random action
             li_Action = np.random.choice(self.Action_Space)
         else:
             # Choose the best action
@@ -47,21 +53,29 @@ class TDDQN_Agent(TAgent, TEpsilon_Greedy_Action_Selection):
     def Update(self, Transition):
         # Unpack the transition tuple
         ll_State, li_Action, lf_Reward, ll_Next_State, lb_Done = Transition
+
+        # Only update if training
         if not (self.Is_Training):
             return
 
+        # Store the transition in memory
         self.Memory.Remember((ll_State, li_Action, lf_Reward, ll_Next_State, lb_Done))
 
-        if (self.Training_Steps % self.gf_Swap_Frequency == 0):
-            self.Model_Target.load_state_dict(self.Model_Current.state_dict())
-
+        # Check if it's time to update
         if (self.Training_Steps % self.gf_Update_Frequency == 0):
             self.Train()
 
+        # Check if it's time to swap target network
+        if (self.Training_Steps % self.gf_Swap_Frequency == 0):
+            self.Model_Target.load_state_dict(self.Model_Current.state_dict())
+
+        # If episode is done, decay exploration rate
         if lb_Done:
             self.Decay_Exploration_Rate()
 
     def Train(self):
+
+        # Sample a batch from memory
         larr_Batch = self.Memory.Batch()
 
         # Convert batch elements into tensors
@@ -75,16 +89,23 @@ class TDDQN_Agent(TAgent, TEpsilon_Greedy_Action_Selection):
         ll_Q_Values = self.Model_Current(ll_States)
 
         # Get Q-values for selected actions
-        lf_Current_Q = ll_Q_Values.gather(1, li_Actions).squeeze(1)  # Shape (batch_size,)
+        ll_Current_Q = ll_Q_Values.gather(1, li_Actions).squeeze(1)
 
-        # Compute target Q-values
         with torch.no_grad():
-            ll_Next_Q_Values = self.Model_Target(ll_Next_States)  # Compute Q-values for next states
-            li_Next_Actions = torch.argmax(ll_Next_Q_Values, dim=1, keepdim=True)  # Best action for next state
-            lf_Target_Q = lf_Rewards + (1 - lb_Dones) * self.gf_Discount_Factor * ll_Next_Q_Values.gather(1, li_Next_Actions).squeeze(1)
+            # Compute q-values for next states using current network
+            ll_Next_Q_Values_Current = self.Model_Current(ll_Next_States)
+
+            # Determine next actions using current network
+            li_Next_Actions = torch.argmax(ll_Next_Q_Values_Current, dim=1, keepdim=True)
+
+            # Use target network to get Q-values for next states
+            ll_Next_Q_Values = self.Model_Target(ll_Next_States)
+
+            # Compute target Q-values
+            ll_Target_Q = lf_Rewards + (1 - lb_Dones) * self.gf_Discount_Factor * ll_Next_Q_Values.gather(1, li_Next_Actions).squeeze(1)
 
         # Compute loss (Mean Squared Error)
-        loss = F.mse_loss(lf_Current_Q, lf_Target_Q)
+        loss = F.mse_loss(ll_Current_Q, ll_Target_Q)
 
         # Gradient descent step
         self.Optimizer.zero_grad()
@@ -95,7 +116,29 @@ class TDDQN_Agent(TAgent, TEpsilon_Greedy_Action_Selection):
         self.Loss = loss.item()
 
     def Policy(self, State):
-        raise NotImplementedError("Policy method not implemented for DDQN agent.")
+        # Convert state to tensor
+        ll_State = torch.tensor(State, dtype=torch.float32)
+
+        # Initialize the probabilities
+        larr_Probabilities = np.zeros(self.Action_Space)
+
+        # Get the Q values for the state
+        larr_Q_Values = self.Model_Current.forward(ll_State).detach().numpy()
+ 
+        # Get the maximum Q value and its count
+        lf_Max_Q_Value = np.max(larr_Q_Values)
+        li_Max_Count = len(np.where(larr_Q_Values == lf_Max_Q_Value)[0])
+
+        # Calculate the action probabilities
+        if (self.Is_Training):
+            larr_Probabilities = np.ones(self.Action_Space) * (self.Exploration_Rate / self.Action_Space)
+            larr_Probabilities[np.where(larr_Q_Values == lf_Max_Q_Value)] = (1.0 / li_Max_Count) - self.Exploration_Rate + (li_Max_Count * self.Exploration_Rate / self.Action_Space)
+        else:
+            larr_Probabilities = np.zeros(self.Action_Space)
+            larr_Probabilities[np.where(larr_Q_Values == lf_Max_Q_Value)] = (1.0 / li_Max_Count)
+        
+        # Return the action probabilities
+        return larr_Probabilities
 
     def __str__(self):
         ls_Result = TAgent.__str__(self)
