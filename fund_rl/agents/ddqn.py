@@ -39,16 +39,13 @@ class TDDQN_Agent(TAgent, TEpsilon_Greedy_Action_Selection):
 
         # Convert state to tensor
         ll_State = torch.tensor(State, dtype=torch.float32)
-        li_Action = -1
 
         if self.Should_Explore() and self.Is_Training:
             # Choose the random action
-            li_Action = np.random.choice(self.Action_Space)
+            return np.random.choice(self.Action_Space)
         else:
             # Choose the best action
-            li_Action = np.argmax(self.Model_Current.forward(ll_State).detach().numpy())
-
-        return li_Action
+            return np.argmax(self.Model_Current.forward(ll_State).detach().numpy())
 
     def Update(self, Transition):
 
