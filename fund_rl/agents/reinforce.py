@@ -132,7 +132,6 @@ class TReinforce_Agent(TAgent):
 
         # Calculate the entropy
         ll_Entropy = ll_Action_Probabilities.entropy().mean()
-        self.Entropy = ll_Entropy.item()
 
         # Calculate a baseline
         ll_Baseline = torch.mean(ll_Returns)
@@ -148,8 +147,9 @@ class TReinforce_Agent(TAgent):
         ll_Loss.backward()
         self.Optimizer.step()
 
-        # Log the loss
+        # Log values
         self.Loss = ll_Loss.item()
+        self.Entropy = ll_Entropy.item()
 
     def Policy(self, State: np.ndarray) -> np.ndarray:
         """
