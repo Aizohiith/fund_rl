@@ -43,7 +43,7 @@ class TPolicy_Visualisation_Analyzer(TAnalyzer):
             li_Col = li_State % self.gg_Grid_Size[0]
             self.gg_Report['Policy'].append((li_Col, li_Row, self.gg_Agent.Policy(ll_State)))
     
-    def Plot(self):
+    def Plot(self, Save_Path=None):
         """
         Plot the policy visualization.
         """
@@ -91,7 +91,10 @@ class TPolicy_Visualisation_Analyzer(TAnalyzer):
                     )
 
         ll_Figure.tight_layout()
-        plt.show()
+        if Save_Path is not None:
+            plt.savefig(Save_Path)
+        else:
+            plt.show()
 
     
     def Print(self):
