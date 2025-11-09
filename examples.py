@@ -84,8 +84,10 @@ def Q_Learning():
     # Evaluate the Agent
     Evaluate_Agent(Environment, Agent, Tracker, Episodes=100)
 
-    # Run a few episodes with rendering
+    # Create the environment with rendering
     Environment = Make_Environment(Environment_Name, render_mode="human")
+
+    # Run a few episodes with rendering
     Run_Agent(Environment, Agent, Episodes=5)
 
 def DDQN():
