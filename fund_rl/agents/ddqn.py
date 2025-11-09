@@ -128,7 +128,7 @@ class TDDQN_Agent(TAgent, TEpsilon_Greedy_Action_Selection):
         # Calculate the action probabilities
         if (self.Is_Training):
             larr_Probabilities = np.ones(self.Action_Space) * (self.Exploration_Rate / self.Action_Space)
-            larr_Probabilities[np.where(larr_Q_Values == lf_Max_Q_Value)] = (1.0 / li_Max_Count) - self.Exploration_Rate + (li_Max_Count * self.Exploration_Rate / self.Action_Space)
+            larr_Probabilities[np.where(larr_Q_Values == lf_Max_Q_Value)] += ((1.0 - self.Exploration_Rate) / li_Max_Count)
         else:
             larr_Probabilities = np.zeros(self.Action_Space)
             larr_Probabilities[np.where(larr_Q_Values == lf_Max_Q_Value)] = (1.0 / li_Max_Count)
