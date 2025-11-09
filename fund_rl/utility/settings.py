@@ -41,13 +41,34 @@ AGENT_DDQN_CARTPOLE = { #200 Episodes
     "Learning_Rate": 0.0002222757658205644,
 }
 
+AGENT_DDQN_FROZENLAKE = { #1_000 Episodes
+    "Hidden_Dimensions": 472,
+    "Hidden_Layers": 5,
+    "Batch_Size": 80,
+    "Swap_Frequency": 12,
+    "Update_Frequency": 1,
+    "Exploration_Decay": 0.8876212772440841,
+    "Learning_Rate": 0.0013950111584847833,
+}
+
+AGENT_DDQN_TAXI = { #1_000 Episodes
+    "Hidden_Dimensions": 472,
+    "Hidden_Layers": 5,
+    "Batch_Size": 80,
+    "Swap_Frequency": 12,
+    "Update_Frequency": 1,
+    "Exploration_Decay": 0.8876212772440841,
+    "Learning_Rate": 0.0013950111584847833,
+}
+
 AGENT_DDQN_SNAKE = { #1_000 Episodes
-    "Hidden_Dimensions": 128,
-    "Hidden_Layers": 1,
-    "Batch_Size": 512,
-    "Swap_Frequency": 8,
-    "Update_Frequency": 32,
-    "Exploration_Decay": 0.9999342140184785,
+    "Hidden_Dimensions": 296,
+    "Hidden_Layers": 2,
+    "Batch_Size": 80,
+    "Swap_Frequency": 984,
+    "Update_Frequency": 1,
+    "Exploration_Decay": 0.99342140184785,
+    "Learning_Rate": 0.00013304742022347677,
 }
 #
 # Configuration settings for PPO agent
@@ -69,6 +90,7 @@ AGENT_PPO_CARTPOLE = { #200 Episodes
     "Iterations": 16,
     "Batch_Size": 856,
     "Minibatch_Size": 24,
+    "Entropy_Factor": 0.01,
 }
 
 AGENT_PPO_LUNAR_LANDER = { #1_000 Episodes
@@ -90,18 +112,31 @@ AGENT_PPO_SNAKE = {
     "Minibatch_Size": 120,
 }
 #
+# Configuration settings for Q-Epsilon agent
+
+AGENT_Q_LEARNING_FROZENLAKE = { # 1000 Episodes
+    "Learning_Rate": 0.1,
+    "Discount_Factor": 0.99,
+    "Exploration_Decay": 0.999,
+    "Min_Exploration_Rate": 0.01,
+    "Exploration_Rate": 1.0,
+    "Initial_Q_Value": 1.0,
+}
+
 # Configuration settings for REINFORCE agent
 
 AGENT_REINFORCE_CARTPOLE = { #200 Episodes
     "Hidden_Dimensions": 8,
     "Hidden_Layers": 3,
     "Learning_Rate": 0.0067272261749594655,
+    "Entropy_Factor": 0.01,
 }
 
 AGENT_REINFORCE_FROZENLAKE = {
-    "Hidden_Dimensions": 8,
-    "Hidden_Layers": 3,
-    "Learning_Rate": 0.01081653664182426,
+    "Hidden_Dimensions": 248,
+    "Hidden_Layers": 4,
+    "Learning_Rate": 0.00032119602645719515,
+    "Entropy_Factor": 0.18608724721573444,
 }
 
 AGENT_REINFORCE_LUNAR_LANDER = { #10_000 Episodes
@@ -130,6 +165,11 @@ SWEEP_REINFORCE = {
             "min": 8,
             "q": 8,
         },
+        "Entropy_Factor": {
+            "distribution": "uniform",
+            "min": 0.0,
+            "max": 1.0,
+        }
     }
 }
 
