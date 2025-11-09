@@ -15,9 +15,6 @@ Unlike high-performance RL libraries, `fund_rl` intentionally prioritizes:
 - Transparent agent implementations
 - 1:1 flow diagram to code mapping
 - Code that favors learning and explainability over performance
-
-Contributions, testing, and suggestions are very welcome as the library continues to mature.
-
 ---
 
 ## 🧩 Key Features
