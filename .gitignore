@@ -7,4 +7,3 @@ __pycache__/
 wandb/
 diagrams/
 experiments/
-experiments.py

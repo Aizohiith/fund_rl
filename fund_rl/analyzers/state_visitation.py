@@ -47,20 +47,24 @@ class TState_Visitation_Analyzer(TAnalyzer):
         self.gg_Report['Median_Visits_Per_State'] = np.median(larr_Top_States_Count)
         self.gg_Report['STD_Visits_Per_State'] = np.std(larr_Top_States_Count)
     
-    def Plot(self):
+    def Plot(self, Save_Path=None):
         """
         Plot the state visitation frequencies.
         """
         if not self.gg_Report:
             raise ValueError("No analysis report found. Please run Analyze method first.")
         
+        plt.clf()
         plt.bar(range(len(self.gg_Report['Top_States'])), self.gg_Report['Top_States_Count'])
         plt.title("Top State Visit Counts")
         plt.xlabel("States")
         plt.ylabel("Visit Counts")
         plt.xticks(range(len(self.gg_Report['Top_States'])), self.gg_Report['Top_States'], rotation=45)
         plt.tight_layout()
-        plt.show()
+        if Save_Path:
+            plt.savefig(Save_Path)
+        else:
+            plt.show()
 
     def Print(self):
         """

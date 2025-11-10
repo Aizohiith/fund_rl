@@ -41,7 +41,7 @@ class TPerformance_Analyzer(TAnalyzer):
         self.gg_Report['Mean Rewards'] = larr_Mean_Rewards
         self.gg_Report['STD Rewards'] = larr_STD_Rewards
     
-    def Plot(self):
+    def Plot(self, Save_Path=None):
         """
         Plot the rewards and losses along with their filtered versions.
         Creates a 2x2 subplot layout for better visualization.
@@ -50,6 +50,7 @@ class TPerformance_Analyzer(TAnalyzer):
         3. Agent's Mean Rewards
         4. Agent's STD Rewards
         """
+        plt.clf()
         plt.subplot(2, 2, 1)
         plt.plot(self.gg_Report['Rewards'], label='Rewards', color='blue', alpha=0.3)
         plt.plot(self.gg_Report['Rewards Filtered'], label='Filtered Rewards', color='blue')
@@ -77,7 +78,10 @@ class TPerformance_Analyzer(TAnalyzer):
         plt.title("Agent's STD Rewards")
 
         plt.tight_layout()
-        plt.show()
+        if Save_Path is not None:
+            plt.savefig(Save_Path)
+        else:
+            plt.show()
 
     
     def Print(self):

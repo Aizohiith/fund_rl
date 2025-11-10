@@ -62,7 +62,7 @@ class TConsistency_Analyzer(TAnalyzer):
 
         self.gg_Tracker.Finish()
 
-    def Plot(self):
+    def Plot(self, Save_Path=None):
         """
         Plots the mean rewards and standard deviation over episodes from the consistency analysis.
         """
@@ -71,10 +71,12 @@ class TConsistency_Analyzer(TAnalyzer):
         plt.xlabel('Episodes')
         plt.ylabel('Rewards')
         plt.title('Agent Training Rewards')
-        plt.legend()
-        plt.show()
+        if Save_Path is not None:
+            plt.savefig(Save_Path)
+        else:
+            plt.show()
 
-    def Print(self):
+    def Print(self, Save_Path=None):
         """
         Prints a summary report of the consistency analysis results.
         """
@@ -83,7 +85,11 @@ class TConsistency_Analyzer(TAnalyzer):
         larr_Report.append(f"Number of Episodes per Iteration: {self.gi_Episodes}")
         larr_Report.append(f"Mean Final Reward: {self.gg_Report['Mean Rewards'][-1]:.2f}")
         larr_Report.append(f"STD of Final Reward: {self.gg_Report['STD Rewards'][-1]:.2f}")
-        print(Format(larr_Report))
+        if Save_Path is not None:
+            with open(Save_Path, 'w') as f:
+                f.write(Format(larr_Report))
+        else:
+            print(Format(larr_Report))
 
 def Training(pp_Arguments : tuple) -> tuple:
     """

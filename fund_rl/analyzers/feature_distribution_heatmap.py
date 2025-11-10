@@ -40,7 +40,7 @@ class TFeature_Distribution_Heatmap_Analyzer(TAnalyzer):
         ll_PCA = PCA(n_components=2)
         self.gg_Report["State_Visitation_Heatmap"] = ll_PCA.fit_transform(larr_States)
     
-    def Plot(self):
+    def Plot(self, Save_Path=None):
         """
         Plot the feature distribution heatmaps.
         """
@@ -49,12 +49,16 @@ class TFeature_Distribution_Heatmap_Analyzer(TAnalyzer):
         
         ll_X, ll_Y = self.gg_Report["State_Visitation_Heatmap"][:, 0] , self.gg_Report["State_Visitation_Heatmap"][:, 1]
 
+        plt.clf()
         plt.hist2d(ll_X, ll_Y, bins=self.gi_Bins, cmap='viridis')
         plt.colorbar(label="State Density")
         plt.xlabel("PCA Component 1")
         plt.ylabel("PCA Component 2")
         plt.title("State Visitation Heatmap (PCA Projection)")
-        plt.show()
+        if Save_Path:
+            plt.savefig(Save_Path + "_PCA_Heatmap.png")
+        else:
+            plt.show()
 
         if not(self.garr_Feature_Indices and self.garr_Feature_Names):
             return
@@ -63,6 +67,7 @@ class TFeature_Distribution_Heatmap_Analyzer(TAnalyzer):
         
         li_Features = len(self.garr_Feature_Indices)
         # Create a grid of subplots (heatmaps for each pair of features)
+        plt.clf()
         ll_Figure, ll_Axies = plt.subplots(li_Features, li_Features, figsize=(15, 12))
 
         for C1 in range(li_Features):
@@ -88,7 +93,10 @@ class TFeature_Distribution_Heatmap_Analyzer(TAnalyzer):
 
         # Adjust layout
         plt.tight_layout()
-        plt.show()
+        if Save_Path:
+            plt.savefig(Save_Path + "_Feature_Distributions.png")
+        else:
+            plt.show()
 
 
     def Print(self):

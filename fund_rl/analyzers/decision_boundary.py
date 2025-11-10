@@ -60,19 +60,23 @@ class TDecision_Boundary_Analyzer(TAnalyzer):
 
         return self.gg_Report
     
-    def Plot(self):
+    def Plot(self, Save_Path=None):
         if not self.gg_Report:
             raise ValueError("No analysis report found. Please run Analyze method first.")
         
         for key, (ll_X, ll_Y, ll_Actions) in self.gg_Report.items():
+            plt.clf()
             plt.contourf(ll_X, ll_Y, ll_Actions, alpha=0.8, cmap='jet')
             plt.colorbar(label='Action')
             # Extract feature names from the key for correct labeling
             feature_names = key.replace("Decision_Boundary_", "").split("_vs_")
             plt.xlabel(feature_names[0])
             plt.ylabel(feature_names[1])
-            plt.title(f"Decision Boundary: {key}")
-            plt.show()
+            plt.title(f"{key.replace('_', ' ')}")
+            if Save_Path is not None:
+                plt.savefig(f"{Save_Path}_{key}.png")
+            else:
+                plt.show()
 
     def Print(self):
         if not self.gg_Report:
